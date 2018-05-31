@@ -57,7 +57,7 @@ module.exports = function(RED) {
                 if(this.queue.length>0)
                     return;
             }
-            if(msg.payload=="OFF")
+            if( (msg.payload<=0.0 && msg.operation!="min") || msg.payload=="OFF")
             {
                 msg.payload = 0.0;
                 msg.operation = "set";
