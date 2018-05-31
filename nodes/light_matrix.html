@@ -1,0 +1,101 @@
+<script type="text/javascript">
+    RED.nodes.registerType('Device',{
+        category: 'Light Matrix',
+        color: '#ffaaaa',
+        defaults: {
+            name: {value:""},
+            switch: {value:false}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "bulb.png",
+        label: function() {
+            var add="";
+            if(this.switch>0)
+                add+=" (Switch)";
+            return this.name||"Device"+add;
+        }
+    });
+
+    RED.nodes.registerType('Setter',{
+        category: 'Light Matrix',
+        color: '#ffaaaa',
+        defaults: {
+            name: {value:""},
+            priority: {value: 0, validate: function(val) {var v=parseInt(val);return ""+v==val;}},
+            operation: {values: ["set"], validate:RED.validators.regex(/^(set|max|min)$/)},
+            overwrite: {value:false},
+            payload: {value: "", validate: function(val) {if(val=="" || val=="ON"||val=="OFF") return true; var v=parseFloat(val); return ""+v==val && v>=0.0 && v<=100.0;}},
+            timeout: {value:"0",required:false,validate:RED.validators.number()},
+            units: {value:"ms"},
+        },
+        inputs:1,
+        outputs:1,
+        icon: "set.png",
+        label: function() {
+            var add="";
+            if(this.payload.length>0)
+                add+="="+this.payload;
+            if(this.overwrite)
+                add+=", O";
+            if(this.timeout>0)
+                add+=", t="+this.timeout+this.units;
+            return this.name||("Setter ("+this.priority+", "+this.operation+add+")");
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="Device">
+    <div class="form-row">
+        <label for="node-input-switch"><i class="icon-tag"></i> Switch</label>
+        <input type="checkbox" id="node-input-switch" placeholder="Switch" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="Device">
+    <p>A node that increments every time a new message is received and sends Hello World in return.<br/>
+    </p>
+</script>
+
+
+<script type="text/x-red" data-template-name="Setter">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-priority"><i class="icon-tag"></i> Priority</label>
+        <input type="text" id="node-input-priority" placeholder="Priority">
+    </div>
+    <div class="form-row">
+        <label for="node-input-operation"><i class="icon-tag"></i> Operation</label>
+        <select id="node-input-operation" style='width:70%' placeholder="Operation">
+            <option value="set" data-i18n="set" selected="selected">set</option>
+            <option value="min" data-i18n="min">min</option>
+            <option value="max" data-i18n="max">max</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-overwrite"><i class="icon-tag"></i> Overwrite</label>
+        <input type="checkbox" id="node-input-overwrite" placeholder="Overwrite" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-payload"><i class="icon-tag"></i> Payload</label>
+        <input type="text" id="node-input-payload" placeholder="Payload">
+    </div>
+    <div class="form-row node-type-duration">
+        <label><i class="icon-tag"></i> Timeout</label>
+        <input type="text" id="node-input-timeout" style="text-align:end; width:70px !important">
+        <select id="node-input-units" style="width:140px !important">
+            <option value="ms" data-i18n="trigger.duration.ms">ms</option>
+            <option value="s" data-i18n="trigger.duration.s">s</option>
+            <option value="min" data-i18n="trigger.duration.m">min</option>
+            <option value="hr" data-i18n="trigger.duration.h">hr</option>
+        </select>
+    </div>
+</script>
+ 
+<script type="text/x-red" data-help-name="Setter">
+    <p>A node that increments every time a new message is received and sends Hello World in return.<br/>
+    </p>
+</script>

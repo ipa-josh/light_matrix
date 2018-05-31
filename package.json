@@ -1,0 +1,13 @@
+{
+    "name"         : "node-red-light-matrix",
+    "version"      : "0.0.1",
+    "description"  : "A sample node for node-red",
+    "dependencies": {
+    },
+    "keywords": [ "node-red" ],
+    "node-red"     : {
+        "nodes": {
+            "light-matri-device": "nodes/light_matrix.js"
+        }
+    }
+}
