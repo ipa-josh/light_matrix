@@ -42,8 +42,9 @@ module.exports = function(RED) {
         var node = this;
         var extend = require("xtend");
 
-        this.queue = [];
+        this.queue = {};
         this.oldValue = 0.0;
+        this.prios = [];
 
         this.integrate = function(msg)
         {
@@ -54,6 +55,7 @@ module.exports = function(RED) {
             {
                 this.queue = this.queue.filter(function(m) {return m.payload>0.0 || m.priority>msg.priority;});
                 msg.payload = 1000.0;
+
                 if(this.queue.length>0)
                     return;
             }
@@ -69,11 +71,18 @@ module.exports = function(RED) {
                 this.queue = this.queue.filter(function(m) {return m.priority>msg.priority;});
             }
 
+            msg.priority = parseFloat(msg.priority);
+
             this.queue[msg.priority] = msg;
 
-            this.queue.sort(function(a,b){
-                return a.priority-b.priority;
-            });
+            this.prios = [];
+            for(var k in this.queue) this.prios.push(k);
+            this.prios.sort();
+
+            while(this.prios.length>0 && this.queue[this.prios[this.prios.length-1]].payload<=0.0) {
+                delete this.queue[this.prios[this.prios.length-1]];
+                this.prios.pop();
+            }
         };
 
         this.compute = function()
@@ -83,8 +92,9 @@ module.exports = function(RED) {
 
             var value=[0.0, this.oldValue, 100.0]; //min, val, max
 
-            for(i in this.queue)
+            for(p in this.prios)
             {
+                var i = this.prios[p];
                 var m = this.queue[i];
 
                 if(m.operation=="min") {
