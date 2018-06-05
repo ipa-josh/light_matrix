@@ -87,12 +87,27 @@ module.exports = function(RED) {
             {
                 var m = this.queue[i];
 
-                if(m.operation=="min")
+                if(m.operation=="min") {
                     value[0] = m.payload;
-                else if(m.operation=="max")
+                    if(value[0]>value[1])
+                        value[1] = value[0];
+                    if(value[0]>value[2])
+                        value[2] = value[0];
+                }
+                else if(m.operation=="max") {
                     value[2] = m.payload;
-                else
+                    if(value[2]<value[1])
+                        value[1] = value[2];
+                    if(value[2]<value[0])
+                        value[0] = value[2];
+                }
+                else {
                     value[1] = m.payload;
+                    if(value[1]<value[0])
+                        value[0] = value[1];
+                    if(value[1]>value[2])
+                        value[2] = value[1];
+                }
             }
             
             //this.warn(value);
