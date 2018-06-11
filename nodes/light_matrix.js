@@ -51,6 +51,8 @@ module.exports = function(RED) {
             //this.warn(this.queue);
             //this.warn(msg);
 
+            msg.priority = parseFloat(msg.priority);
+
             if(msg.payload>100.0 || msg.payload=="ON")
             {
                 this.queue = this.queue.filter(function(m) {return m.payload>0.0 || m.priority>msg.priority;});
@@ -70,8 +72,6 @@ module.exports = function(RED) {
             {
                 this.queue = this.queue.filter(function(m) {return m.priority>msg.priority;});
             }
-
-            msg.priority = parseFloat(msg.priority);
 
             this.queue[msg.priority] = msg;
 
