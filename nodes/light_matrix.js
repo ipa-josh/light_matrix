@@ -142,14 +142,13 @@ module.exports = function(RED) {
 
             var value = this.compute();
 
+            if(value<=0.0) value="OFF";
+            else if(value>100.0 || (value>0 && config.switch)) value="ON";
+
             if(this.oldValue != value)
             {
-                this.oldValue = value;
-
-                if(value<=0.0) value="OFF";
-                else if(value>100.0 || (value>0 && config.switch)) value="ON";
-
                 node.send({payload: value});
+                this.oldValue = value;
             }
         
         });
