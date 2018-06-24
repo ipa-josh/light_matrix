@@ -145,7 +145,7 @@ module.exports = function(RED) {
 
             var value = this.compute();
 
-            if(value<=0.0) value="OFF";
+            if(value<1.0) value="OFF";
             else if(value>100.0 || (value>0 && config.switch)) value="ON";
 
             if(this.oldValue != value)
