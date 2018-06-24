@@ -43,7 +43,7 @@ module.exports = function(RED) {
         var extend = require("xtend");
 
         this.queue = {};
-        this.oldValue = 0.0;
+        this.oldValue = -1;
         this.prios = [];
 
         this.integrate = function(msg)
@@ -65,7 +65,7 @@ module.exports = function(RED) {
             {
                 msg.payload = 0.0;
                 msg.operation = "set";
-                this.oldValue = -1;
+                //this.oldValue = -1;
             }
 
             if(msg.overwrite)
