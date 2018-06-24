@@ -55,7 +55,7 @@ module.exports = function(RED) {
 
             if(msg.payload>100.0 || msg.payload=="ON")
             {
-                this.queue = this.queue.filter(function(m) {return m.payload>0.0 || m.priority>msg.priority;});
+                //this.queue = this.queue.filter(function(m) {return m.payload>0.0 || m.priority>msg.priority;});
                 msg.payload = 1000.0;
 
                 if(this.queue.length>0)
@@ -70,7 +70,11 @@ module.exports = function(RED) {
 
             if(msg.overwrite)
             {
-                this.queue = this.queue.filter(function(m) {return m.priority>msg.priority;});
+                //this.queue = this.queue.filter(function(m) {return m.priority>msg.priority;});
+                for(var k=0; k<this.prios.length; k++) {
+                    if(this.prios[k]>=msg.priority) break;
+                    delete this.queue[this.prios[k]];
+                }
             }
 
             this.queue[msg.priority] = msg;
