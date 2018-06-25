@@ -94,6 +94,10 @@ module.exports = function(RED) {
             //this.warn(this.queue);
             //this.warn(this.oldValue);
 
+            if(this.prios.length<1) {
+                return 0.0;
+            }
+
             var value=[0.0, this.oldValue, 100.0]; //min, val, max
 
             for(p in this.prios)
