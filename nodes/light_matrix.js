@@ -94,8 +94,9 @@ module.exports = function(RED) {
             //this.warn(this.queue);
             //this.warn(this.oldValue);
 
-            if(this.oldValue=="ON") this.oldValue = 100.0;
-            else if(this.oldValue=="OFF") this.oldValue = 0.0;
+            if(this.prios.length<1) {
+                return 0.0;
+            }
 
             var value=[0.0, this.oldValue, 100.0]; //min, val, max
 
@@ -145,13 +146,14 @@ module.exports = function(RED) {
 
             var value = this.compute();
 
-            if(value<1.0) value="OFF";
-            else if(value>100.0 || (value>0 && config.switch)) value="ON";
-
             if(this.oldValue != value)
             {
-                node.send({payload: value});
                 this.oldValue = value;
+
+                if(value<=0.0) value="OFF";
+                else if(value>100.0 || (value>0 && config.switch)) value="ON";
+
+                node.send({payload: value});
             }
         
         });
