@@ -142,7 +142,8 @@ module.exports = function(RED) {
                 overwrite: false
             };
 
-            this.integrate( extend(defMsg, msg) );
+            msg.payload = parseFloat(msg.payload);
+	    this.integrate( extend(defMsg, msg) );
 
             var value = this.compute();
 
