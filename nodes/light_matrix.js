@@ -53,7 +53,7 @@ module.exports = function(RED) {
 
             msg.priority = parseFloat(msg.priority);
 
-            if(msg.payload>100.0 || msg.payload=="ON")
+            if(msg.payload>100.0)
             {
                 //this.queue = this.queue.filter(function(m) {return m.payload>0.0 || m.priority>msg.priority;});
                 msg.payload = 1000.0;
@@ -61,7 +61,7 @@ module.exports = function(RED) {
                 if(this.queue.length>0)
                     return;
             }
-            if( (msg.payload<=0.0 && msg.operation!="min") || msg.payload=="OFF")
+            if( (msg.payload<=0.0 && msg.operation!="min") || msg.payload<0.0)
             {
                 msg.payload = 0.0;
                 msg.operation = "set";
@@ -142,7 +142,12 @@ module.exports = function(RED) {
                 overwrite: false
             };
 
-            msg.payload = parseFloat(msg.payload);
+            if(msg.payload=="ON")
+		    msg.payload = 1000.0;
+            else if(msg.payload=="OFF")
+		    msg.payload = -1.0;
+            else
+		msg.payload = parseFloat(msg.payload);
 	    this.integrate( extend(defMsg, msg) );
 
             var value = this.compute();
